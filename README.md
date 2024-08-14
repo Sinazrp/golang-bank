@@ -1,4 +1,4 @@
-# Bank and tran
+# Banking Backend
 A minimalist Golang project, enabling basic banking operations like deposits, withdrawals, balance checks, and account creation.
 
 - built in Go version 1.22
