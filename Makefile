@@ -1,3 +1,6 @@
+createmigration:
+	migrate create -ext sql -seq init_schema
+
 postgres:
 	docker run --name postgres162 -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:16-alpine
 
@@ -16,4 +19,4 @@ migratedown:
 sqlc:
 	sqlc generate
 
-.PHONY: createdb dropdb postgres migrateup migratedown sqlc
+.PHONY: createmigration createdb dropdb postgres migrateup migratedown sqlc
