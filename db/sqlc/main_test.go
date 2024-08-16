@@ -21,6 +21,9 @@ func TestMain(m *testing.M) {
 
 	m.Run()
 }
+func TestWithTx(t *testing.T) {
+
+}
 func RandomAccount() CreateAccountParams {
 	return CreateAccountParams{
 		Owner:    util.RandomOwner(),
