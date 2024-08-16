@@ -37,6 +37,3 @@ UPDATE accounts
 SET balance = 0
 WHERE id = $1
 RETURNING *;
-
--- name: DeleteAllAccounts :exec
-DELETE FROM accounts;

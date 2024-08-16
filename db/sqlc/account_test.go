@@ -145,14 +145,3 @@ func TestZeroBalance(t *testing.T) {
 	require.WithinDuration(t, account1.CreatedAt, account2.CreatedAt, 0)
 
 }
-
-func TestDeleteAllAccounts(t *testing.T) {
-	_ = testQueries.DeleteAllAccounts(context.Background())
-	accounts, err := testQueries.ListAccounts(context.Background(), ListAccountsParams{
-		Limit:  5,
-		Offset: 5,
-	})
-	require.NoError(t, err)
-	require.Len(t, accounts, 0)
-
-}
