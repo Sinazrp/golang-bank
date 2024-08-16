@@ -1,7 +1,6 @@
 package util
 
 import (
-	db "github.com/sinazrp/golang-bank/db/sqlc"
 	"math/rand"
 	"strings"
 	"time"
@@ -20,7 +19,8 @@ func RandomString(n int) string {
 	k := len(alphabet)
 
 	for i := 0; i < n; i++ {
-		c := alphabet[RandomInt(0, int64(k))]
+
+		c := alphabet[RandomInt(0, int64(k-1))]
 		sb.WriteByte(c)
 	}
 
@@ -39,12 +39,4 @@ func RandomCurrency() string {
 	currencies := []string{"EUR", "USD", "CAD"}
 	n := len(currencies)
 	return currencies[RandomInt(0, int64(n)-1)]
-}
-
-func RandomAccount() db.CreateAccountParams {
-	return db.CreateAccountParams{
-		Owner:    RandomOwner(),
-		Balance:  RandomMoney(),
-		Currency: RandomCurrency(),
-	}
 }
