@@ -32,7 +32,11 @@ SELECT * FROM accounts
 WHERE id = $1
 FOR NO KEY UPDATE;
 
--- name: ZeroBalance :exec
+-- name: ZeroBalance :one
 UPDATE accounts
 SET balance = 0
-WHERE id = $1;
+WHERE id = $1
+RETURNING *;
+
+-- name: DeleteAllAccounts :exec
+DELETE FROM accounts;
