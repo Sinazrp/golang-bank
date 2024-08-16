@@ -67,6 +67,15 @@ func (q *Queries) DeleteAccount(ctx context.Context, id int64) error {
 	return err
 }
 
+const deleteAllAccounts = `-- name: DeleteAllAccounts :exec
+DELETE FROM accounts
+`
+
+func (q *Queries) DeleteAllAccounts(ctx context.Context) error {
+	_, err := q.db.ExecContext(ctx, deleteAllAccounts)
+	return err
+}
+
 const getAccount = `-- name: GetAccount :one
 SELECT id, owner, balance, currency, created_at FROM accounts
 WHERE id = $1 LIMIT 1
@@ -170,13 +179,22 @@ func (q *Queries) UpdateAccount(ctx context.Context, arg UpdateAccountParams) (A
 	return i, err
 }
 
-const zeroBalance = `-- name: ZeroBalance :exec
+const zeroBalance = `-- name: ZeroBalance :one
 UPDATE accounts
 SET balance = 0
 WHERE id = $1
+RETURNING id, owner, balance, currency, created_at
 `
 
-func (q *Queries) ZeroBalance(ctx context.Context, id int64) error {
-	_, err := q.db.ExecContext(ctx, zeroBalance, id)
-	return err
+func (q *Queries) ZeroBalance(ctx context.Context, id int64) (Account, error) {
+	row := q.db.QueryRowContext(ctx, zeroBalance, id)
+	var i Account
+	err := row.Scan(
+		&i.ID,
+		&i.Owner,
+		&i.Balance,
+		&i.Currency,
+		&i.CreatedAt,
+	)
+	return i, err
 }
