@@ -6,3 +6,4 @@ A minimalist Golang project, enabling basic banking operations like deposits, wi
 - Uses [Migrate](https://github.com/golang-migrate/migrate): Database migrations written in Go.
 - Uses [Make](github.com/justinas/nosurf ): improve commands
 - Uses [Postgresql](github.com/justinas/nosurf ): Open Source Relational Database
+- Uses [Testify](https://github.com/stretchr/testify ): tools for testifying The code
