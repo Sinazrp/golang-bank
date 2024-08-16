@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"github.com/sinazrp/golang-bank/util"
 	"log"
 	"testing"
 
@@ -19,4 +20,11 @@ func TestMain(m *testing.M) {
 	testQueries = New(conn)
 
 	m.Run()
+}
+func RandomAccount() CreateAccountParams {
+	return CreateAccountParams{
+		Owner:    util.RandomOwner(),
+		Balance:  util.RandomMoney(),
+		Currency: util.RandomCurrency(),
+	}
 }
