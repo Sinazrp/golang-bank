@@ -8,7 +8,7 @@ CREATE TABLE "accounts" (
 
 CREATE TABLE "entries" (
                            "id" bigserial PRIMARY KEY,
-                           "account_id" bigint,
+                           "account_id" bigint NOT NULL ,
                            "amount" bigint NOT NULL,
                            "created_at" timestamptz DEFAULT now(),
                            CONSTRAINT fk_account FOREIGN KEY ("account_id") REFERENCES "accounts" ("id")
