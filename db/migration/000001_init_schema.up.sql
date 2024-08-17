@@ -16,8 +16,8 @@ CREATE TABLE "entries" (
 
 CREATE TABLE "transfers" (
                              "id" bigserial PRIMARY KEY,
-                             "from_account_id" bigint,
-                             "to_account_id" bigint,
+                             "from_account_id" bigint NOT NULL,
+                             "to_account_id" bigint NOT NULL,
                              "amount" bigint NOT NULL,
                              "created_at" timestamptz NOT NULL DEFAULT now(),
                              CONSTRAINT fk_from_account FOREIGN KEY ("from_account_id") REFERENCES "accounts" ("id"),
