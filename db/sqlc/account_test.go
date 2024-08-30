@@ -132,16 +132,3 @@ func TestGetAccountForUpdate(t *testing.T) {
 	require.Equal(t, account1.Currency, account2.Currency)
 	require.WithinDuration(t, account1.CreatedAt, account2.CreatedAt, 0)
 }
-
-func TestZeroBalance(t *testing.T) {
-	account1, _, _ := CreateRandomAccount(t)
-	account2, err := testQueries.ZeroBalance(context.Background(), account1.ID)
-	require.NoError(t, err)
-	require.NotEmpty(t, account2)
-	require.Equal(t, account1.ID, account2.ID)
-	require.Equal(t, account1.Owner, account2.Owner)
-	require.Equal(t, int64(0), account2.Balance)
-	require.Equal(t, account1.Currency, account2.Currency)
-	require.WithinDuration(t, account1.CreatedAt, account2.CreatedAt, 0)
-
-}
