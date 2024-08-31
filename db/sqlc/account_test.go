@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"github.com/sinazrp/golang-bank/util"
 	"github.com/stretchr/testify/require"
+	"log"
 	"testing"
 )
 
@@ -75,6 +76,7 @@ func TestListAccount(t *testing.T) {
 	accounts, err := testQueries.ListAccounts(context.Background(), arg)
 	require.NoError(t, err)
 	require.Len(t, accounts, 5)
+	log.Printf("accounts: %v", accounts)
 	for _, account := range accounts {
 		require.NotEmpty(t, account)
 	}
