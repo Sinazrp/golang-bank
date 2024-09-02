@@ -7,4 +7,5 @@ A minimalist Golang project, enabling basic banking operations like deposits, wi
 - Uses [Make](github.com/justinas/nosurf ): improve commands
 - Uses [Postgresql](github.com/justinas/nosurf ): Open Source Relational Database
 - Uses [Testify](https://github.com/stretchr/testify ): tools for testifying The code
-- uses Github Action : integrate automatic testing on every push on github
+- - Uses [Gin](https://github.com/gin-gonic/gin?tab=readme-ov-file): tools for creating Rest API
+- uses GitHub Action : integrate automatic testing on every push on GitHub
