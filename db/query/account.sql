@@ -38,3 +38,10 @@ RETURNING *;
 -- name: DeleteAccount :exec
 DELETE FROM accounts
 WHERE id = $1;
+
+-- name: GetAccountsByOwner :many
+SELECT * FROM accounts
+WHERE owner = $1
+ORDER BY id
+LIMIT $2
+OFFSET $3;

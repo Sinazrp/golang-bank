@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sinazrp/golang-bank/db/sqlc"
 	"net/http"
+	"strconv"
 )
 
 type createAccountRequest struct {
@@ -20,6 +21,10 @@ type getAccountRequest struct {
 type getAccountListRequest struct {
 	PageID   int32 `form:"page_id" binding:"required,min=1"`
 	PageSize int32 `form:"page_size" binding:"required,min=1,max=10"`
+}
+
+type deleteAccountRequest struct {
+	ID int64 `uri:"id" binding:"required,min=1"`
 }
 
 func (server *Server) createAccount(ctx *gin.Context) {
@@ -83,4 +88,23 @@ func (server *Server) getAccountList(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, account)
 
+}
+func (server *Server) deleteAccount(ctx *gin.Context) {
+	var req deleteAccountRequest
+	if err := ctx.ShouldBindUri(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+	}
+	err := server.store.DeleteAccount(ctx, req.ID)
+
+	if err != nil {
+
+		if errors.Is(err, sql.ErrNoRows) {
+			ctx.JSON(http.StatusNotFound, errorResponse(err))
+			return
+		}
+
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+	ctx.JSON(http.StatusOK, " Id = "+strconv.FormatInt(req.ID, 10)+" deleted successfully")
 }
