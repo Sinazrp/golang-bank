@@ -120,13 +120,3 @@ func (q *Queries) UpdateEntry(ctx context.Context, arg UpdateEntryParams) (Entry
 	)
 	return i, err
 }
-
-const delete_entries_by_account_id = `-- name: delete_entries_by_account_id :exec
-DELETE FROM entries
-WHERE account_id = $1
-`
-
-func (q *Queries) delete_entries_by_account_id(ctx context.Context, accountID int64) error {
-	_, err := q.db.ExecContext(ctx, delete_entries_by_account_id, accountID)
-	return err
-}

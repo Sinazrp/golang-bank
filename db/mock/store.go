@@ -287,17 +287,3 @@ func (mr *MockStoreMockRecorder) UpdateEntry(arg0, arg1 interface{}) *gomock.Cal
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateEntry", reflect.TypeOf((*MockStore)(nil).UpdateEntry), arg0, arg1)
 }
-
-// delete_entries_by_account_id mocks base method.
-func (m *MockStore) delete_entries_by_account_id(arg0 context.Context, arg1 int64) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "delete_entries_by_account_id", arg0, arg1)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// delete_entries_by_account_id indicates an expected call of delete_entries_by_account_id.
-func (mr *MockStoreMockRecorder) delete_entries_by_account_id(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "delete_entries_by_account_id", reflect.TypeOf((*MockStore)(nil).delete_entries_by_account_id), arg0, arg1)
-}
