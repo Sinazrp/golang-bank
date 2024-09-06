@@ -9,4 +9,5 @@ A minimalist Golang project, enabling basic banking operations like deposits, wi
 - Uses [Testify](https://github.com/stretchr/testify ): tools for testifying The code
 - Uses [Gin](https://github.com/gin-gonic/gin?tab=readme-ov-file): tools for creating Rest API
 - Uses [Viper](https://github.com/spf13/viper): configuration management
+- Uses [GoMock](https://github.com/golang/mock): mocking tools for testing
 - uses GitHub Action : integrate automatic testing on every push on GitHub
