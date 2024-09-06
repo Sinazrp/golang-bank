@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 )
 
@@ -109,4 +110,21 @@ func addMoney(ctx context.Context, queries *Queries, accountID1 int64, amount1 i
 	}
 	return account1, account2, err
 
+}
+
+func (store *Store) DeleteAccountTx(ctx context.Context, id int64) error {
+	return store.execTx(ctx, func(q *Queries) error {
+		var err error
+		err = store.delete_entries_by_account_id(ctx, id)
+		if err != nil && !errors.Is(err, sql.ErrNoRows) {
+			return err
+		}
+		err = store.DeleteAccount(ctx, id)
+		if err != nil {
+			return err
+		}
+
+		return nil
+
+	})
 }

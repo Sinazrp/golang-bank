@@ -21,6 +21,10 @@ SET amount = $2
 WHERE id = $1
 RETURNING *;
 
+-- name: delete_entries_by_account_id :exec
+DELETE FROM entries
+WHERE account_id = $1;
+
 
 
 
