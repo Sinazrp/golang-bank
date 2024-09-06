@@ -5,16 +5,19 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/sinazrp/golang-bank/api"
 	db "github.com/sinazrp/golang-bank/db/sqlc"
+	"github.com/sinazrp/golang-bank/util"
 	"log"
 )
 
-const (
-	dbDriver      = "postgres"
-	dbSource      = "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable"
-	serverAddress = "0.0.0.0:8080"
-)
-
 func main() {
+
+	config, err := util.LoadConfig(".")
+	if err != nil {
+		log.Fatal("cannot load config:", err)
+	}
+	dbDriver := config.DBDriver
+	dbSource := config.DBSource
+	serverAddress := config.ServerAddress
 
 	connection, err := sql.Open(dbDriver, dbSource)
 	if err != nil {
