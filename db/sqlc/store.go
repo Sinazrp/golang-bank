@@ -6,16 +6,24 @@ import (
 	"fmt"
 )
 
+// Store Interface: This defines the contract for the store, which includes all the methods of
+// the Querier (e.g., basic CRUD operations) and a TransferTx method for handling transactions.
+// This interface allows you to have multiple implementations of Store (e.g., SQL-based, NoSQL-based, in-memory) if needed.
 type Store interface {
 	Querier
 	TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error)
 }
 
+// SQLStore struct: This is a concrete implementation of the Store interface, and it wraps around
+// the SQL database (sql.DB). It extends the functionality provided by Queries with transaction
+//handling, via the execTx method and TransferTx.
 type SQLStore struct {
 	*Queries
 	db *sql.DB
 }
 
+// NewStore we can use SQLStore here because we implement the
+//Store interface, and it used as receiver in execTx and TransferTx methods
 func NewStore(db *sql.DB) Store {
 	return &SQLStore{
 		db:      db,
