@@ -2,6 +2,7 @@ package api
 
 import (
 	"bytes"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"github.com/golang/mock/gomock"
@@ -16,22 +17,97 @@ import (
 )
 
 func TestGetAccountAPI(t *testing.T) {
+
+	// create a random account
 	account := randomAccount()
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-	store := mockdb.NewMockStore(ctrl)
-	store.EXPECT().GetAccount(gomock.Any(), gomock.Eq(account.ID)).Times(1).Return(account, nil)
 
-	server := NewServer(store)
-	recorder := httptest.NewRecorder()
-	url := fmt.Sprintf("/accounts/%d", account.ID)
-	request, err := http.NewRequest(http.MethodGet, url, nil)
-	require.NoError(t, err)
+	testCases := []struct {
+		name          string
+		accountID     int64
+		buildStubs    func(store *mockdb.MockStore)
+		checkResponse func(t *testing.T, recorder *httptest.ResponseRecorder)
+	}{
+		{
+			name:      "NotFound",
+			accountID: account.ID,
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().GetAccount(gomock.Any(), gomock.Eq(account.ID)).Times(1).Return(db.Account{}, sql.ErrNoRows)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusNotFound, recorder.Code)
+				requiredBodyMatchAccount(t, recorder.Body, db.Account{})
+			},
+		},
+		{
+			name:      "OK",
+			accountID: account.ID,
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().GetAccount(gomock.Any(), gomock.Eq(account.ID)).Times(1).Return(account, nil)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusOK, recorder.Code)
+				requiredBodyMatchAccount(t, recorder.Body, account)
+			},
+		},
+		{
+			name:      "internalError",
+			accountID: account.ID,
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().GetAccount(gomock.Any(), gomock.Eq(account.ID)).Times(1).Return(db.Account{}, sql.ErrConnDone)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusInternalServerError, recorder.Code)
+				requiredBodyMatchAccount(t, recorder.Body, db.Account{})
+			},
+		},
+		{
+			name:      "invalidID",
+			accountID: 0,
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().GetAccount(gomock.Any(), gomock.Any()).Times(0)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusBadRequest, recorder.Code)
 
-	server.router.ServeHTTP(recorder, request)
+			},
+		},
+	}
 
-	require.Equal(t, http.StatusOK, recorder.Code)
-	requiredBodyMatchAccount(t, recorder.Body, account)
+	for i := range testCases {
+		tc := testCases[i]
+
+		t.Run(tc.name, func(t *testing.T) {
+			// create a mock controller
+			ctrl := gomock.NewController(t)
+			// when the test is finished, finish the mock controller
+			defer ctrl.Finish()
+
+			// create a mock store
+			store := mockdb.NewMockStore(ctrl)
+
+			// build stubs
+			tc.buildStubs(store)
+
+			// create a new server with the mock store
+			server := NewServer(store)
+
+			// create a new recorder
+			recorder := httptest.NewRecorder()
+
+			// create a new request with the GET method and the url /accounts/{account.ID}
+			url := fmt.Sprintf("/accounts/%d", tc.accountID)
+			request, err := http.NewRequest(http.MethodGet, url, nil)
+			require.NoError(t, err)
+
+			// call the server with the request and recorder
+			server.router.ServeHTTP(recorder, request)
+
+			// check the response
+			tc.checkResponse(t, recorder)
+
+		})
+
+	}
 
 }
 func randomAccount() db.Account {
