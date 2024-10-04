@@ -9,9 +9,19 @@ import (
 	_ "github.com/lib/pq"
 )
 
+// TestMain is the main entry point for running all the test cases.
+// It initializes the test database connection and store the connection
+// in the testDB variable and store the Queries in the testQueries variable.
 var testQueries *Queries
 var testDB *sql.DB
 
+// TestMain is the main entry point for running all the test cases.
+//
+// It first loads a configuration from the parent directory of the current
+// working directory, then connects to the configured database, and finally
+// creates a new store from the database connection. The test queries are
+// stored in the testQueries variable and the database connection is stored
+// in the testDB variable.
 func TestMain(m *testing.M) {
 	config, err := util.LoadConfig("../..")
 	if err != nil {

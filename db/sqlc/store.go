@@ -16,15 +16,15 @@ type Store interface {
 
 // SQLStore struct: This is a concrete implementation of the Store interface, and it wraps around
 // the SQL database (sql.DB). It extends the functionality provided by Queries with transaction
-//handling, via the execTx method and TransferTx.
+// handling, via the execTx method and TransferTx.
 type SQLStore struct {
 	*Queries
 	db *sql.DB
 }
 
-// NewStore we can use SQLStore here because we implement the
-//Store interface, and it used as receiver in execTx and TransferTx methods
-func NewStore(db *sql.DB) Store {
+// NewSQLStore we can use SQLStore here because we implement the
+// Store interface, and it used as receiver in execTx and TransferTx methods
+func NewSQLStore(db *sql.DB) Store {
 	return &SQLStore{
 		db:      db,
 		Queries: New(db),
@@ -93,6 +93,11 @@ func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (Tr
 			return err
 		}
 
+		//This if statement is used to determine the order in which the addMoney function is called,
+		//depending on the relative values of FromAccountID and ToAccountID. By ordering the accounts
+		//consistently (based on their IDs), it helps prevent potential deadlocks when there are multiple
+		//simultaneous transactions between the same accounts.
+
 		if arg.FromAccountID < arg.ToAccountID {
 
 			result.FromAccount, result.ToAccount, err = addMoney(ctx, queries, arg.FromAccountID, -arg.Amount, arg.ToAccountID, arg.Amount)
@@ -105,6 +110,11 @@ func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (Tr
 
 	return result, err
 }
+
+// addMoney performs two AddAccountBalance operations in a single transaction. It takes
+// four parameters: two account IDs and two amounts. It will add amount1 to the account
+// with ID accountID1 and add amount2 to the account with ID accountID2. The function
+// returns the two modified accounts and an error (if any).
 func addMoney(ctx context.Context, queries *Queries, accountID1 int64, amount1 int64, accountID2 int64, amount2 int64) (account1 Account, account2 Account, err error) {
 	account1, err = queries.AddAccountBalance(ctx, AddAccountBalanceParams{
 		ID:     accountID1,
