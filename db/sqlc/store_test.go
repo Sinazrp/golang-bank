@@ -10,15 +10,20 @@ import (
 
 func TestTransferTx(t *testing.T) {
 	existed := make(map[int]bool)
-	store := NewStore(testDB)
+	store := NewSQLStore(testDB)
 	account1, _, _ := CreateRandomAccount(t)
 	account2, _, _ := CreateRandomAccount(t)
 	fmt.Println(">> before:", account1.Balance, account2.Balance)
 	// run n concurrent transfer transactions
 	n := 9
 	amount := int64(10)
-
+	//This creates a channel that can send and receive error values.
+	//This channel will be used to collect any errors that occur during
+	//the concurrent transfer transactions.
 	errs := make(chan error)
+
+	//This creates a channel that can send and receive TransferTxResult values.
+	//This channel will be used to collect the results of each transfer transaction.
 	results := make(chan TransferTxResult)
 
 	for i := 0; i < n; i++ {
@@ -91,6 +96,10 @@ func TestTransferTx(t *testing.T) {
 		require.True(t, diff1 > 0)
 		require.True(t, diff1%amount == 0)
 
+		//existed is a map that stores the number of times a transaction has succeeded
+		//k is the number of times the transaction has succeeded
+		//this code checks if the transaction has succeeded at least once and at most n times
+		//and that the number of times it has succeeded is unique (i.e. not already in the existed map)
 		k := int(diff1 / amount)
 		require.True(t, k >= 1 && k <= n)
 		require.NotContains(t, existed, k)
@@ -114,7 +123,7 @@ func TestTransferTx(t *testing.T) {
 
 }
 func TestTransferTxDeadLock(t *testing.T) {
-	store := NewStore(testDB)
+	store := NewSQLStore(testDB)
 	account1, _, _ := CreateRandomAccount(t)
 	account2, _, _ := CreateRandomAccount(t)
 	// run n concurrent transfer transactions
