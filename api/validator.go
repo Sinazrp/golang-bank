@@ -12,3 +12,17 @@ var validCurrency validator.Func = func(fieldLevel validator.FieldLevel) bool {
 	}
 	return false
 }
+
+var validAmount validator.Func = func(fieldLevel validator.FieldLevel) bool {
+	if amount, ok := fieldLevel.Field().Interface().(int64); ok {
+		return amount > 0
+	}
+	return false
+}
+
+var validAccountID validator.Func = func(fieldLevel validator.FieldLevel) bool {
+	if accountID, ok := fieldLevel.Field().Interface().(int64); ok {
+		return accountID > 0
+	}
+	return false
+}
