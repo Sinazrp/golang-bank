@@ -26,3 +26,10 @@ var validAccountID validator.Func = func(fieldLevel validator.FieldLevel) bool {
 	}
 	return false
 }
+
+var validPassword validator.Func = func(fieldLeve validator.FieldLevel) bool {
+	if password, ok := fieldLeve.Field().Interface().(string); ok {
+		return len(password) > 6
+	}
+	return false
+}
