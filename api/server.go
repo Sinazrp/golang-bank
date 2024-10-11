@@ -21,6 +21,7 @@ func NewServer(store db.Store) *Server {
 		v.RegisterValidation("currency", validCurrency)
 		v.RegisterValidation("amount", validAmount)
 		v.RegisterValidation("ID", validAccountID)
+		v.RegisterValidation("password", validPassword)
 	}
 
 	// Create account
@@ -41,6 +42,8 @@ func NewServer(store db.Store) *Server {
 	// Create Transfer
 	router.POST("/transfers", server.createTransfer)
 
+	//create User
+	router.POST("/user", server.createUser)
 	server.router = router
 	return server
 }
