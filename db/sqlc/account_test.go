@@ -10,7 +10,10 @@ import (
 )
 
 func CreateRandomAccount(t *testing.T) (Account, error, CreateAccountParams) {
+	user, err, _ := CreateRandomUser()
+
 	arg := RandomAccount()
+	arg.Owner = user.Username
 
 	account, err := testQueries.CreateAccount(context.Background(), arg)
 	return account, err, arg
