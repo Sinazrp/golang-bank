@@ -2,19 +2,23 @@ package db
 
 import (
 	"context"
+	"github.com/sinazrp/golang-bank/util"
 	"github.com/stretchr/testify/require"
 	"testing"
 )
 
-func CreateRandomUser() (User, error, CreateUserParams) {
+func CreateRandomUser(t *testing.T) (User, error, CreateUserParams) {
 	arg := RandomUser()
+	hashedPassword, err := util.HashPassword(util.RandomString(6))
+	require.NoError(t, err)
+	arg.HashedPassword = hashedPassword
 
 	user, err := testQueries.CreateUser(context.Background(), arg)
 	return user, err, arg
 
 }
 func TestCreateUser(t *testing.T) {
-	user, err, arg := CreateRandomUser()
+	user, err, arg := CreateRandomUser(t)
 	require.NoError(t, err)
 	require.NotEmpty(t, user)
 	require.Equal(t, arg.Username, user.Username)
@@ -25,7 +29,7 @@ func TestCreateUser(t *testing.T) {
 
 }
 func TestGetUser(t *testing.T) {
-	user1, _, _ := CreateRandomUser()
+	user1, _, _ := CreateRandomUser(t)
 	user2, err := testQueries.GetUser(context.Background(), user1.Username)
 	require.NoError(t, err)
 	require.NotEmpty(t, user2)
