@@ -47,4 +47,13 @@ func RandomAccount() CreateAccountParams {
 		Balance:  util.RandomMoney(),
 		Currency: util.RandomCurrency(),
 	}
+
+}
+func RandomUser() CreateUserParams {
+	return CreateUserParams{
+		Username:       util.RandomOwner(),
+		FullName:       util.RandomOwner(),
+		Email:          util.RandomEmail(),
+		HashedPassword: "",
+	}
 }

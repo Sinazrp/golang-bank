@@ -26,6 +26,9 @@ func RandomString(n int) string {
 
 	return sb.String()
 }
+func RandomEmail() string {
+	return RandomString(6) + "@gmail.com"
+}
 
 func RandomOwner() string {
 	return RandomString(6)
