@@ -11,6 +11,7 @@ import (
 const (
 	authorizationHeaderKey  = "authorization"
 	authorizationTypeBearer = "bearer"
+	authorizationPayLoadKey = "authorization_payload"
 )
 
 func authMiddleware(tokenMaker token.Maker) gin.HandlerFunc {
@@ -35,5 +36,15 @@ func authMiddleware(tokenMaker token.Maker) gin.HandlerFunc {
 			return
 
 		}
+		accessToken := fields[1]
+		payload, err := tokenMaker.VerifyToken(accessToken)
+		if err != nil {
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, errorResponse(err))
+			return
+
+		}
+		ctx.Set(authorizationPayLoadKey, payload)
+		ctx.Next()
+
 	}
 }
