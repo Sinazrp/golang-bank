@@ -11,4 +11,4 @@ A minimalist Golang project, enabling basic banking operations like deposits, wi
 - Uses [Viper](https://github.com/spf13/viper): configuration management
 - Uses [GoMock](https://github.com/golang/mock): mocking tools for testing
 - Uses GitHub Action : integrate automatic testing on every push on GitHub
-- Uses[Paseto](https://github.com/o1egl/paseto): Platform-Agnostic SEcurity TOkens)
+- Uses [Paseto](https://github.com/o1egl/paseto): Platform-Agnostic SEcurity TOkens)
