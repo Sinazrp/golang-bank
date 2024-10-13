@@ -29,6 +29,8 @@ func (server *Server) setupRoutes() {
 
 	// Login User
 	router.POST("/login", server.LoginUser)
+	//get User
+	authRoutes.GET("/user", server.getUser)
 
 	server.router = router
 
