@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	db "github.com/sinazrp/golang-bank/db/sqlc"
+	"github.com/sinazrp/golang-bank/token"
 	"net/http"
 )
 
@@ -23,10 +24,17 @@ func (server *Server) createTransfer(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
 	}
-	if !server.validAccount(ctx, req.FromAccountID, req.Currency) {
+	payload := ctx.MustGet(authorizationPayLoadKey).(*token.Payload)
+	if !server.validAccount(ctx, req.FromAccountID, req.Currency, payload, true) {
 		return
 	}
-	if !server.validAccount(ctx, req.ToAccountID, req.Currency) {
+
+	if !server.validAccount(ctx, req.ToAccountID, req.Currency, payload, false) {
+		return
+	}
+	if req.FromAccountID == req.ToAccountID {
+		err := errors.New("cannot transfer to the same account")
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
 	}
 	arg := db.TransferTxParams{
@@ -44,7 +52,7 @@ func (server *Server) createTransfer(ctx *gin.Context) {
 
 }
 
-func (server *Server) validAccount(ctx *gin.Context, accountID int64, currency string) bool {
+func (server *Server) validAccount(ctx *gin.Context, accountID int64, currency string, payload *token.Payload, checkOwner bool) bool {
 	account, err := server.store.GetAccount(ctx, accountID)
 
 	if err != nil {
@@ -54,6 +62,14 @@ func (server *Server) validAccount(ctx *gin.Context, accountID int64, currency s
 		}
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return false
+	}
+
+	if checkOwner {
+		if account.Owner != payload.Username {
+			err := errors.New("account doesn't belong to the authenticated user")
+			ctx.JSON(http.StatusUnauthorized, errorResponse(err))
+			return false
+		}
 	}
 	if account.Currency != currency {
 		err := fmt.Errorf("account doesnt have the neccesary currency should be %s but got %s", currency, account.Currency)
