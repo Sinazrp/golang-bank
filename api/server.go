@@ -26,7 +26,7 @@ func NewServer(store db.Store, config util.Config) (*Server, error) {
 
 	}
 
-	server := &Server{store: store, tokenMaker: tokenMaker}
+	server := &Server{store: store, tokenMaker: tokenMaker, config: config}
 
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		v.RegisterValidation("currency", validCurrency)
