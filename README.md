@@ -10,5 +10,5 @@ A minimalist Golang project, enabling basic banking operations like deposits, wi
 - Uses [Gin](https://github.com/gin-gonic/gin?tab=readme-ov-file): tools for creating Rest API
 - Uses [Viper](https://github.com/spf13/viper): configuration management
 - Uses [GoMock](https://github.com/golang/mock): mocking tools for testing
-- Uses GitHub Action : integrate automatic testing on every push on GitHub
+- Uses [GitHub Action](https://github.com/Sinazrp/golang-bank/actions) : integrate automatic testing on every push on GitHub
 - Uses [Paseto](https://github.com/o1egl/paseto): Platform-Agnostic SEcurity TOkens
