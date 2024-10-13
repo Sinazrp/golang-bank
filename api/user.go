@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/lib/pq"
 	"github.com/sinazrp/golang-bank/db/sqlc"
+	"github.com/sinazrp/golang-bank/token"
 	"github.com/sinazrp/golang-bank/util"
 	"net/http"
 	"time"
@@ -113,5 +114,16 @@ func (server *Server) LoginUser(ctx *gin.Context) {
 		User:        createUserResponse(user),
 	}
 	ctx.JSON(http.StatusOK, rsp)
+
+}
+
+func (server *Server) getUser(ctx *gin.Context) {
+	authPayload := ctx.MustGet(authorizationPayLoadKey).(*token.Payload)
+	user, err := server.store.GetUser(ctx, authPayload.Username)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+	ctx.JSON(http.StatusOK, user)
 
 }
