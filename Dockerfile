@@ -13,13 +13,11 @@ FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /app/main .
 COPY --from=builder /app/migrate ./migrate
+COPY app.env .
 COPY start.sh .
 COPY db/migration ./migration
-
 
 EXPOSE 8080
 
 CMD ["/app/main"]
-ENTRYPOINT ["/app/start.sh", "/app/main"]
-
-
+ENTRYPOINT [ "/app/start.sh" ]
