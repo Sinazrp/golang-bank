@@ -6,8 +6,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
-    depends_on:
-      - postgres
     entrypoint: ["/app/start.sh"]
     command: ["/app/main"]
 
