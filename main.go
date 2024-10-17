@@ -15,11 +15,10 @@ func main() {
 	if err != nil {
 		log.Fatal("cannot load config:", err)
 	}
-	dbDriver := config.DBDriver
 	dbSource := config.DBSource
 	serverAddress := config.ServerAddress
 
-	connection, err := sql.Open(dbDriver, dbSource)
+	connection, err := sql.Open("postgres", dbSource)
 	if err != nil {
 		log.Fatal("cannot connect to db:", err)
 	}
