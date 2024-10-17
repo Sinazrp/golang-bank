@@ -13,7 +13,6 @@ FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /app/main .
 COPY --from=builder /app/migrate ./migrate
-COPY app.env .
 COPY start.sh /app/start.sh
 RUN chmod +x /app/start.sh
 COPY db/migration ./migration
