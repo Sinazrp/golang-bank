@@ -3,7 +3,6 @@ package util
 import (
 	"log"
 	"os"
-	"strconv"
 	"time"
 )
 
@@ -41,12 +40,10 @@ func LoadConfig() (config Config, err error) {
 		log.Fatal("ACCESS_TOKEN_DURATION environment variable is not set")
 	}
 
-	accessTokenDuration, err := strconv.ParseInt(accessTokenDurationStr, 10, 64)
+	config.AccessTokenDuration, err = time.ParseDuration(accessTokenDurationStr)
 	if err != nil {
 		log.Fatal("Invalid ACCESS_TOKEN_DURATION value")
 	}
-
-	config.AccessTokenDuration = time.Duration(accessTokenDuration) * time.Second
 
 	return
 }
