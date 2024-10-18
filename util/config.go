@@ -21,12 +21,12 @@ func LoadConfig(path string) (config Config, err error) {
 
 	viper.AutomaticEnv()
 	//err = viper.ReadInConfig()
-	//dbDriver := viper.GetString("DB_DRIVER")
-	//dbSource := viper.GetString("DB_SOURCE")
-	//serverAddress := viper.GetString("SERVER_ADDRESS")
-	//tokenSymmetricKey := viper.GetString("TOKEN_SYMMETRIC_KEY")
-	//accessTokenDuration := viper.GetString("ACCESS_TOKEN_DURATION")
-	//databaseURL := viper.GetString("DATABASE_URL")
+	viper.GetString("DB_DRIVER")
+	viper.GetString("DB_SOURCE")
+	viper.GetString("SERVER_ADDRESS")
+	viper.GetString("TOKEN_SYMMETRIC_KEY")
+	viper.GetTime("ACCESS_TOKEN_DURATION")
+	viper.GetString("DATABASE_URL")
 	//
 	//if dbDriver == "" || dbSource == "" || serverAddress == "" || tokenSymmetricKey == "" || accessTokenDuration == "" || databaseURL == "" {
 	//	log.Fatal("One or more required environment variables are not set")
@@ -36,7 +36,6 @@ func LoadConfig(path string) (config Config, err error) {
 	//	return
 	//}
 	//err = viper.Unmarshal(&config)
-	viper.AutomaticEnv()
 
 	err = viper.Unmarshal(&config)
 	if err != nil {
