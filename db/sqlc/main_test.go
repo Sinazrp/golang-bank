@@ -23,7 +23,7 @@ var testDB *sql.DB
 // stored in the testQueries variable and the database connection is stored
 // in the testDB variable.
 func TestMain(m *testing.M) {
-	config, err := util.LoadConfig("../..")
+	config, err := util.LoadConfig()
 	if err != nil {
 		log.Fatal("cannot load config:", err)
 	}
