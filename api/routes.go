@@ -32,6 +32,8 @@ func (server *Server) setupRoutes() {
 	//get User
 	authRoutes.GET("/user", server.getUser)
 
+	router.POST("/token/renew_access", server.RenewAccessToken)
+
 	server.router = router
 
 }
