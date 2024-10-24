@@ -6,7 +6,7 @@ import "rpc_login_user.proto";
 
 option go_package = "github.com/sinazrp/golang-bank/pb";
 
-service SimpleBank {
+service GolangBank {
   rpc CreateUser (CreateUserRequest) returns (CreateUserResponse){}
   rpc LoginUser  (LoginUserRequest) returns (LoginUserResponse){}
 
